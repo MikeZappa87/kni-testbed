@@ -41,11 +41,7 @@
 
 - name: Disable Swap
   shell: |
-    swapoff -a
-
-- name: Ensure swap disabled after reboot
-  shell: |
-    sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+    swapoff -a && sed -i '/swap/d' /etc/fstab
 
 - ansible.posix.sysctl:
     name: net.ipv4.ip_forward
