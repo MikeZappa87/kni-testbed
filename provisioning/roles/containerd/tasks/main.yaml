@@ -7,11 +7,6 @@
     exclude:
      - "etc/cni/net.d/10-containerd-net.conflist"
   when: ansible_facts['os_family'] != 'Linux'
-#Above is where we should point at our fork
-# - name: Copy working network configuration
-#   ansible.builtin.copy:
-#     src: 10-containerd-net.conflist
-#     dest: /etc/cni/net.d/10-containerd-net.conflist
 
 - name: Make sure containerd service is running
   ansible.builtin.systemd:
