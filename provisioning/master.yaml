@@ -1,0 +1,11 @@
+---
+- hosts: all
+  become: true
+  roles:
+   - containerd
+   - kubernetes-common
+   - kubernetes-control-plane-init
+   - flannel
+
+
+   #kubectl taint nodes --all node-role.kubernetes.io/control-plane-

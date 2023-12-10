@@ -1,0 +1,22 @@
+
+- name: Download flannel yaml
+  get_url:
+    url: https://raw.githubusercontent.com/flannel-io/flannel/v{{ flannel_version }}/Documentation/kube-flannel.yml
+    dest: /tmp/kube-flannel.yml
+
+- name: Configure Flannel
+  lineinfile:
+    path: /tmp/kube-flannel.yml
+    insertafter: '- --kube-subnet-mgr'
+    line: '        - --iface=eth1'
+
+# - name: Update to host-gw
+#   ansible.builtin.replace:
+#     path: /tmp/kube-flannel.yml
+#     regexp: 'vxlan'
+#     replace: 'host-gw'
+
+- name: Apply flannel
+  become_user: vagrant
+  shell: |
+    kubectl apply -f /tmp/kube-flannel.yml

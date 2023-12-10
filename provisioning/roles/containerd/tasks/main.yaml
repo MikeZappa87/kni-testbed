@@ -1,0 +1,22 @@
+
+- name: Download and Unarchive containerd
+  ansible.builtin.unarchive:
+    src: https://github.com/containerd/containerd/releases/download/v{{ containerd_version }}/cri-containerd-cni-{{ containerd_version }}-linux-amd64.tar.gz
+    dest: /
+    remote_src: yes
+    exclude:
+     - "etc/cni/net.d/10-containerd-net.conflist"
+  when: ansible_facts['os_family'] != 'Linux'
+
+# - name: Copy working network configuration
+#   ansible.builtin.copy:
+#     src: 10-containerd-net.conflist
+#     dest: /etc/cni/net.d/10-containerd-net.conflist
+
+- name: Make sure containerd service is running
+  ansible.builtin.systemd:
+    name: containerd.service
+    state: started
+    daemon_reload: yes
+    enabled: yes
+  when: ansible_facts['os_family'] != 'Windows'

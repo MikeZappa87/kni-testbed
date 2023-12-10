@@ -1,0 +1,24 @@
+  - name: Get IP eth1 ip address
+    shell: ip -f inet addr show eth1 | sed -En -e 's/.*inet ([0-9.]+).*/\1/p'
+    register: output
+  
+  - name: Create kubelet directory
+    file:
+      path: /etc/systemd/system/kubelet.service.d
+      state: directory
+
+  - name: Copy kubelet config defaults
+    ansible.builtin.copy:
+      src: 10-kubeadm.conf
+      dest: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+
+  - name: Configure kubelet
+    lineinfile:
+      path: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+      line: Environment="KUBELET_EXTRA_ARGS=--node-ip={{ output.stdout }}"
+
+  - name: Copy the join command to server location
+    copy: src=join-command dest=/tmp/join-command.sh mode=0777
+
+  - name: Join the node to cluster
+    command: sh /tmp/join-command.sh
