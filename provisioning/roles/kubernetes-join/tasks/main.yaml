@@ -15,7 +15,7 @@
   - name: Configure kubelet
     lineinfile:
       path: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
-      line: Environment="KUBELET_EXTRA_ARGS=--node-ip={{ output.stdout }}"
+      line: Environment="KUBELET_EXTRA_ARGS=--node-ip={{ node_ip }}"
 
   - name: Copy the join command to server location
     copy: src=join-command dest=/tmp/join-command.sh mode=0777

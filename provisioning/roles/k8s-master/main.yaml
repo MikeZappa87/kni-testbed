@@ -1,0 +1,2 @@
+- name:
+  shell: kubectl taint nodes kube-master-1 node-role.kubernetes.io/control-plane:NoSchedule-

@@ -6,6 +6,4 @@
    - kubernetes-common
    - kubernetes-control-plane-init
    - flannel
-
-
-   #kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+   - k8s-master

@@ -14,6 +14,9 @@ Vagrant.configure("2") do |config|
         master.vm.hostname = "kube-master-1"
         master.vm.provision "ansible" do |ansible|
             ansible.playbook = "provisioning/master.yaml"
+            ansible.extra_vars = {
+                node_ip: "192.168.56.2",
+            }
         end
     end
 
@@ -24,6 +27,9 @@ Vagrant.configure("2") do |config|
             node.vm.hostname = "kube-worker-#{i}"
             node.vm.provision "ansible" do |ansible|
                 ansible.playbook = "provisioning/worker.yaml"
+                ansible.extra_vars = {
+                    node_ip: "192.168.56.#{i + 10}",
+                }
             end
         end
     end

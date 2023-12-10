@@ -4,25 +4,35 @@
     pkg:
       - apt-transport-https
       - ca-certificates
+      - curl
+      - gpg
 
-- name: Add an apt signing key for Kubernetes
-  apt_key:
-    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
-    state: present
+- name: Creates directory
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: 0775
 
-- name: Adding apt repository for Kubernetes
-  apt_repository:
-    repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
-    state: present
-    filename: kubernetes.list
+- name: Download file from a file path
+  ansible.builtin.get_url:
+    url: https://pkgs.k8s.io/core:/stable:/v{{ kubernetes_version }}/deb/Release.key
+    dest: /tmp/Release.key
+
+- name: execute scripts to setup apt
+  ansible.builtin.shell:
+    cmd: cat /tmp/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+- name: execute more scripts
+  ansible.builtin.shell:
+    cmd: echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v{{ kubernetes_version }}/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
 - name: Install a list of packages
   apt:
     update_cache: yes
     pkg:
-    - kubelet={{ kubernetes_version }}
-    - kubeadm={{ kubernetes_version }}
-    - kubectl={{ kubernetes_version }}
+    - kubelet 
+    - kubeadm
+    - kubectl
 
 - name: Enable kernel modules
   shell: |

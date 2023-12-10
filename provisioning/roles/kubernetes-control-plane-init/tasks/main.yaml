@@ -1,6 +1,6 @@
 - name: Kubeadm Init
   shell: |
-    kubeadm init --apiserver-advertise-address="192.168.56.2" --apiserver-cert-extra-sans="192.168.56.2" --pod-network-cidr=10.240.0.0/16
+    kubeadm init --apiserver-advertise-address="192.168.56.2" --apiserver-cert-extra-sans="192.168.56.2" --pod-network-cidr=10.244.0.0/16 --control-plane-endpoint={{ node_ip }}
 
 - name: Create kube directory
   file:
@@ -23,3 +23,4 @@
 - name: Copy join command to local file
   become: false
   local_action: copy content="{{ join_command.stdout_lines[0] }}" dest="./join-command"
+  
