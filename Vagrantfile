@@ -1,4 +1,4 @@
-IMAGE_NAME = "bento/ubuntu-20.04"
+IMAGE_NAME = "bento/ubuntu-22.04"
 
 N=1
 
